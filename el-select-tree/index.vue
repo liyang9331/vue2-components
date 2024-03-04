@@ -1,5 +1,6 @@
 <template>
   <el-select
+    ref="select"
     :value="valueTitle"
     :placeholder="placeholder"
     :clearable="clearable"
@@ -18,16 +19,24 @@
         id="tree-option"
         ref="selectTree"
         show-checkbox
+        @check-change="orgCheckChange"
+        :check-strictly="isCheckStrictly"
         :accordion="accordion"
         :data="options"
         :props="props"
         :node-key="props.value"
         :default-expanded-keys="defaultExpandedKey"
         :filter-node-method="filterNode"
-        @node-click="handleNodeClick"
+        :default-expand-all="defaultExpandAll"
+        @current-change="onCurrentChange"
       >
+        <!-- @node-click="handleNodeClick" -->
       </el-tree>
     </el-option>
+    <div class="bottom-btn" v-if="isButton">
+      <el-button type="primary" @click="confirm">确认</el-button>
+      <el-button @click="resetting">重置</el-button>
+    </div>
   </el-select>
 </template>
 
@@ -52,6 +61,16 @@ export default {
       default: () => {
         return [];
       },
+    },
+    /* tree 是否严格的遵循父子不互相关联的做法 */
+    isCheckStrictly: {
+      type: Boolean,
+      default: false,
+    },
+    /* 是否单选 */
+    isRadio: {
+      type: Boolean,
+      default: true,
     },
     /* 初始值 */
     value: {
@@ -93,6 +112,16 @@ export default {
       type: Boolean,
       default: true,
     },
+    /* 是否显示确认、重置按钮 */
+    isButton: {
+      type: Boolean,
+      default: true,
+    },
+    /* 是否默认展开所有节点 */
+    defaultExpandAll: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -100,12 +129,54 @@ export default {
       valueId: this.value, // 初始值
       valueTitle: "",
       defaultExpandedKey: [],
+      selectOrg: {
+        orgsid: [],
+      },
+      isOpenCheckStrictly: false, //是否开启父子不关联
     };
+  },
+  created() {
+    this.isOpenCheckStrictly = this.isCheckStrictly;
   },
   mounted() {
     this.initHandle();
   },
   methods: {
+    // 确认按钮点击事件处理
+    confirm() {
+        this.$refs.select.blur();
+    },
+    // 重置
+    resetting() {
+      this.clearHandle();
+    },
+    // 单选
+    orgCheckChange(data, checked) {
+      //   console.log(data);
+      this.handleNodeClick(data);
+      if (this.isRadio) {
+        const indexs = this.selectOrg.orgsid.indexOf(data.id);
+        if (indexs < 0 && this.selectOrg.orgsid.length === 1 && checked) {
+          this.$refs.selectTree.setCheckedNodes([data]);
+          this.selectOrg.orgsid = [];
+          this.selectOrg.orgsid.push(data.id);
+        } else if (this.selectOrg.orgsid.length === 0 && checked) {
+          this.selectOrg.orgsid = [];
+          this.selectOrg.orgsid.push(data.id);
+        } else if (
+          indexs >= 0 &&
+          this.selectOrg.orgsid.length === 1 &&
+          !checked
+        ) {
+          this.selectOrg.orgsid = [];
+        }
+      }
+    },
+    // 当前选中节点变化时触发的事件
+    onCurrentChange(data, node) {
+      // console.log("-----")
+      // console.log(data,node)
+    },
     // 初始化值
     initHandle() {
       if (this.valueId) {
@@ -133,10 +204,15 @@ export default {
     },
     // 切换选项
     handleNodeClick(node) {
+      //   console.log(node);
       this.valueTitle = node[this.props.label];
       this.valueId = node[this.props.value];
-      this.$emit("getValue", this.valueId);
+      const list = this.$refs.selectTree.getCheckedNodes();
+      //   console.log(list);
+      this.$emit("getValue", list);
+      // this.$emit("getValue", this.valueId);
       this.defaultExpandedKey = [];
+    //   this.$refs.select.blur();
     },
     // 清除选中
     clearHandle() {
@@ -169,7 +245,21 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+.bottom-btn {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ::v-deep .el-button {
+    width: 50px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 .el-scrollbar .el-scrollbar__view .el-select-dropdown__item {
   height: auto;
   max-height: 274px;
