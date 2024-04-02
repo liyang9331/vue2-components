@@ -7,9 +7,9 @@
     :before-close="handleClose">
     <el-descriptions title="" :column="2" border>
       <el-descriptions-item label="任务类型">
-        <el-select v-model="taskForm.taskType" style="width: 100%">
+        <!-- <el-select v-model="taskForm.taskType" style="width: 100%">
           <el-option v-for="type in dict.type.task_type" :key="type.value" :value="type.value" :label="type.label"></el-option>
-        </el-select>
+        </el-select> -->
       </el-descriptions-item>
       <el-descriptions-item label="任务等级">
         <el-radio-group v-model="taskForm.taskLevelId" @change="levelChange">
@@ -58,8 +58,8 @@
           <div class="join-user">
             <div v-for="allot in taskForm.allotList" :key="allot.id">
               <div v-if="allot.type === 3" class="user"><i class="el-icon-user"></i>{{ allot.typeName }}</div>
-              <div v-if="allot.type === 1" class="user dept"><img src="@/assets/images/dept.png" alt="">{{ allot.typeName }}(共{{ allot.num }}人)</div>
-              <div v-if="allot.type === 2" class="user group"><img src="@/assets/images/group.png" alt="">{{ allot.typeName }}(共{{ allot.num }}人)</div>
+              <!-- <div v-if="allot.type === 1" class="user dept"><img src="@/assets/images/dept.png" alt="">{{ allot.typeName }}(共{{ allot.num }}人)</div>
+              <div v-if="allot.type === 2" class="user group"><img src="@/assets/images/group.png" alt="">{{ allot.typeName }}(共{{ allot.num }}人)</div> -->
             </div>
           </div>
         </template>
@@ -71,18 +71,17 @@
       <el-button @click="dialogVisible = false">取 消</el-button>
       <el-button type="primary" @click="handleConfirm">确 定</el-button>
     </span>
-    <Department :open="orgVisible" @cancel="orgVisible = false" @handleSubmit="orgSubmit" :checkUser="checkUser" v-if="orgVisible"/>
+    <!-- <Department :open="orgVisible" @cancel="orgVisible = false" @handleSubmit="orgSubmit" :checkUser="checkUser" v-if="orgVisible"/> -->
   </el-dialog>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { getToken } from "@/utils/auth"
-import Department from '@/components/Department/index.vue'
-import { editTask } from '@/api/task'
+// import Department from '@/components/Department/index.vue'
 
 export default {
-  components: { Department },
+  components: {  },
   dicts: ['task_type', 'task_status', 'task_level'],
   data() {
     return {

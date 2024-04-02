@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import { finishTask } from '@/api/task'
 
 export default {
   data() {

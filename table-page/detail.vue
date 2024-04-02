@@ -44,8 +44,8 @@
           <div class="join-user">
             <div v-for="allot in taskForm.allotList" :key="allot.id">
               <div v-if="allot.type === 3" class="user"><i class="el-icon-user"></i>{{ allot.typeName }}</div>
-              <div v-if="allot.type === 1" class="user dept"><img src="@/assets/images/dept.png" alt="">{{ allot.typeName }}(共{{ allot.num }}人)</div>
-              <div v-if="allot.type === 2" class="user group"><img src="@/assets/images/group.png" alt="">{{ allot.typeName }}(共{{ allot.num }}人)</div>
+              <!-- <div v-if="allot.type === 1" class="user dept"><img src="@/assets/images/dept.png" alt="">{{ allot.typeName }}(共{{ allot.num }}人)</div> -->
+              <!-- <div v-if="allot.type === 2" class="user group"><img src="@/assets/images/group.png" alt="">{{ allot.typeName }}(共{{ allot.num }}人)</div> -->
             </div>
           </div>
         </el-descriptions-item>
@@ -181,9 +181,6 @@
 </template>
 
 <script>
-import * as API_task from '@/api/task'
-import { groupTree } from '@/api/system/group'
-import { listDept } from '@/api/system/dept'
 import { getFileDownloadUrl, getPreviewOrDownload } from '@/api/file.js'
 import HandlePie from './handlePie.vue'
 import AddTask from './components/addTask'
@@ -217,10 +214,10 @@ export default {
     }
   },
   created() {
-    this.searchQuery.taskId = this.$route.query.id
-    this.getGroupData()
-    this.getDeptData()
-    this.init()
+    // this.searchQuery.taskId = this.$route.query.id
+    // this.getGroupData()
+    // this.getDeptData()
+    // this.init()
   },
   methods: {
     init() {

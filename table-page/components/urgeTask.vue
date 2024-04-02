@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import { getNotCompletePerson, urgeTask } from '@/api/task'
 
 export default {
   data() {
