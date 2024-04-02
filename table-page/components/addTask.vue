@@ -11,11 +11,11 @@
           <el-option v-for="type in dict.type.task_type" :key="type.value" :value="type.value" :label="type.label"></el-option>
         </el-select> -->
       </el-descriptions-item>
-      <el-descriptions-item label="任务等级">
+      <!-- <el-descriptions-item label="任务等级">
         <el-radio-group v-model="taskForm.taskLevelId" @change="levelChange">
           <el-radio v-for="level in dict.type.task_level" :key="level.value" :label="level.value">{{ level.label }}</el-radio>
         </el-radio-group>
-      </el-descriptions-item>
+      </el-descriptions-item> -->
       <el-descriptions-item span="2" label="任务名称">
         <el-input v-model="taskForm.taskName"></el-input>
       </el-descriptions-item>
@@ -82,7 +82,7 @@ import { getToken } from "@/utils/auth"
 
 export default {
   components: {  },
-  dicts: ['task_type', 'task_status', 'task_level'],
+  // dicts: ['task_type', 'task_status', 'task_level'],
   data() {
     return {
       taskForm: { fileList: [] },
@@ -115,7 +115,7 @@ export default {
       }
     },
     levelChange(val) {
-      this.$set(this.taskForm, 'taskLevel', this.dict.type.task_level.find(item => item.value === val).label)
+      // this.$set(this.taskForm, 'taskLevel', this.dict.type.task_level.find(item => item.value === val).label)
     },
     addUser() {
       this.orgVisible = true

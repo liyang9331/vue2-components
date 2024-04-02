@@ -8,8 +8,7 @@
       size="small"
     >
       <el-row :gutter="32">
-        <el-col :span="6">
-        </el-col>
+        <el-col :span="6"> </el-col>
         <el-col :span="6">
           <el-form-item label="任务状态" prop="taskStatus">
             <el-select
@@ -17,12 +16,12 @@
               placeholder="请选择"
               style="width: 100%"
             >
-              <el-option
+              <!-- <el-option
                 v-for="status in dict.type.task_status"
                 :key="status.value"
                 :value="status.value"
                 :label="status.label"
-              ></el-option>
+              ></el-option> -->
             </el-select>
           </el-form-item>
         </el-col>
@@ -33,12 +32,12 @@
               placeholder="请选择"
               style="width: 100%"
             >
-              <el-option
+              <!-- <el-option
                 v-for="level in dict.type.task_level"
                 :key="level.value"
                 :value="level.label"
                 :label="level.label"
-              ></el-option>
+              ></el-option> -->
             </el-select>
           </el-form-item>
         </el-col>
@@ -117,61 +116,61 @@
       </div>
       <el-table v-loading="loading" :data="tableData" row-key="id" border>
         <el-table-column label="序号" width="50" type="index"></el-table-column>
-        <el-table-column label="任务类型" prop="taskType"></el-table-column>
-        <el-table-column label="任务名称" prop="taskName"></el-table-column>
-        <el-table-column label="任务等级" type="taskLevel">
+        <el-table-column label="任务类型" prop="name"></el-table-column>
+        <el-table-column label="任务名称" prop="name"></el-table-column>
+        <el-table-column label="任务等级" type="name">
           <template slot-scope="scope">
             <svg-icon
               icon-class="level"
               :class="
-                scope.row.taskLevel === '紧急'
+                scope.row.name === '紧急'
                   ? 'level-0'
-                  : scope.row.taskLevel === '重要'
+                  : scope.row.name === '重要'
                   ? 'level-1'
                   : 'level-2'
               "
             />
-            <span style="margin-left: 6px">{{ scope.row.taskLevel }}</span>
+            <span style="margin-left: 6px">{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="接收人数"
-          prop="taskAllotNum"
+          prop="name"
           width="80"
         ></el-table-column>
         <el-table-column
           label="办理时限"
-          prop="handerTimeLimit"
+          prop="name"
           width="100"
         ></el-table-column>
-        <el-table-column label="任务状态" prop="taskStatus" width="160">
+        <el-table-column label="任务状态" prop="status" width="160">
           <template slot-scope="scope">
-            <span :class="`status-${scope.row.taskStatus}`">
+            <span :class="`status-${scope.row.status}`">
               <svg-icon
-                v-if="scope.row.taskStatus < 4"
+                v-if="scope.row.status < 4"
                 icon-class="status-ing"
-                :class="[`status-${scope.row.taskStatus}`]"
+                :class="[`status-${scope.row.status}`]"
               />
               <svg-icon
                 v-else
                 icon-class="status-finish"
-                :class="[`status-${scope.row.taskStatus}`]"
+                :class="[`status-${scope.row.status}`]"
               />
               <span style="margin-left: 6px">{{
-                statusObj[scope.row.taskStatus]
+                statusObj[scope.row.status]
               }}</span>
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="任务进度" prop="taskProgress" width="180">
+        <!-- <el-table-column label="任务进度" prop="name" width="180">
           <template slot-scope="scope">
-            <el-progress :percentage="scope.row.taskProgress"></el-progress>
+            <el-progress :percentage="scope.row.name"></el-progress>
           </template>
-        </el-table-column>
-        <el-table-column label="创建人" prop="createBy"></el-table-column>
-        <el-table-column label="创建时间" prop="createTime" min-width="160">
+        </el-table-column> -->
+        <el-table-column label="创建人" prop="name"></el-table-column>
+        <el-table-column label="创建时间" prop="time" min-width="160">
           <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.createTime) }}</span>
+            <span>{{ parseTime(scope.row.time) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180">
@@ -183,14 +182,14 @@
               >详情</el-button
             >
             <el-button
-              v-if="scope.row.taskStatus < 4"
+              v-if="scope.row.status < 4"
               size="mini"
               type="text"
               @click="handleUrge(scope.row.id)"
               >催办</el-button
             >
             <el-button
-              v-if="scope.row.taskStatus < 4"
+              v-if="scope.row.status < 4"
               size="mini"
               type="text"
               @click="handleFinish(scope.row.id)"
@@ -205,13 +204,16 @@
           </template>
         </el-table-column>
       </el-table>
-      <pagination
-        v-show="total > 0"
-        :total="total"
-        :page.sync="searchQuery.pageNum"
-        :limit.sync="searchQuery.pageSize"
-        @pagination="pageChange"
-      />
+      <div class="pagination" style="display: flex;justify-content: flex-end;">
+        <pagination
+          v-show="total > 0"
+          :total="total"
+          :page.sync="searchQuery.pageNum"
+          :limit.sync="searchQuery.pageSize"
+          layout=" prev, pager, next"
+          @pagination="pageChange"
+        />
+      </div>
     </div>
     <AddTask ref="addTask" @confirm="getTableData" />
     <FinishTask ref="finishTask" @confirm="getTableData" />
@@ -230,7 +232,7 @@ export default {
     FinishTask,
     UrgeTask,
   },
-  dicts: ["task_type", "task_status", "task_level"],
+  // dicts: ["task_type", "task_status", "task_level"],
   data() {
     return {
       searchQuery: {
@@ -259,16 +261,25 @@ export default {
     };
   },
   created() {
-    // this.getTableData();
+    this.getTableData();
   },
   methods: {
     getTableData() {
-      API_task.getTaskList(this.searchQuery).then((res) => {
-        if (res.code === 200) {
-          this.total = Number(res.total);
-          this.tableData = res.rows;
-        }
-      });
+      let list = Array.from({ length: 10 }, (item, key) => ({
+        name: 1,
+        id: key,
+        status: 1,
+        time: "2024-04-01 12:30:05",
+      }));
+      console.log(list);
+      this.total = Number(list.length);
+      this.tableData = list;
+      // API_task.getTaskList(this.searchQuery).then((res) => {
+      //   if (res.code === 200) {
+      //     this.total = Number(res.total);
+      //     this.tableData = res.rows;
+      //   }
+      // });
     },
     handleSearch() {
       this.searchQuery.pageNum = 1;
